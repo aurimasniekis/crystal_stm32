@@ -52,8 +52,11 @@
 static GPIO_InitTypeDef  GPIO_InitStruct;
 
 /* Private function prototypes -----------------------------------------------*/
-static void SystemClock_Config(void);
+void SystemClock_Config(void);
 
+void a(void) {
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+}
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -125,7 +128,7 @@ int sys_init(int speed)
   * @param  None
   * @retval None
   */
-static void SystemClock_Config(void)
+void SystemClock_Config(void)
 {
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_OscInitTypeDef RCC_OscInitStruct;

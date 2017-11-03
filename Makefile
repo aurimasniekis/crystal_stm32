@@ -89,7 +89,7 @@ CFLAGS    += -ffunction-sections -fdata-sections
 CFLAGS    += $(INCS) $(DEFS)
 
 # Crystal flags
-CRFLAGS    = --cross-compile --target "thumbv7em-none-eabi" --prelude empty --release
+CRFLAGS    = --cross-compile --target "thumbv7em-none-eabi" --prelude empty --release --no-debug
 
 # Linker flags
 LDFLAGS    = -Wl,--gc-sections -Wl,-Map=$(TARGET).map $(LIBS) -T$(MCU_LC).ld
@@ -133,11 +133,11 @@ obj/%.o : %.c | dirs
 	$Q$(CC) $(CFLAGS) -c -o $@ $< -MMD -MF dep/$(*F).d
 
 $(CRYSTAL_OBJ) : $(TARGET_CR) | dirs
-	$(CRYSTAL) build $(CRFLAGS) -o $(@:%.o=%) src/$+
+	$(CRYSTAL) build $(CRFLAGS) -o $(@:%.o=%) $+
 
 $(TARGET).elf: $(OBJS) $(CRYSTAL_OBJ)
 	@echo "[LD]      $(TARGET).elf"
-	$(CC) $(CFLAGS) $(LDFLAGS) src/startup_$(MCU_LC).s $^ -o $@
+	$Q$(CC) $(CFLAGS) $(LDFLAGS) src/startup_$(MCU_LC).s $^ -o $@
 	@echo "[OBJDUMP] $(TARGET).lst"
 	$Q$(OBJDUMP) -St $(TARGET).elf >$(TARGET).lst
 	@echo "[SIZE]    $(TARGET).elf"
